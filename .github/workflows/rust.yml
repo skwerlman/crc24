@@ -17,8 +17,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build
-      run: cargo build --verbose
+      run: cargo build --verbose --manifest-path native/crc24/Cargo.toml
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo test --verbose --manifest-path native/crc24/Cargo.toml
     - name: Run clippy
-      run: cargo clippy
+      run: cargo clippy --manifest-path native/crc24/Cargo.toml
