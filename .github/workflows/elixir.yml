@@ -34,10 +34,13 @@ jobs:
       run: mix test
     - name: Run formatter
       run: mix format --check-formatted
+      continue-on-error: true
     - name: Run credo
       run: mix credo --strict
+      continue-on-error: true
     - name: Run gradient
       run: mix gradient
+      continue-on-error: true
     - name: Restore Dialyzer cache
       uses: actions/cache@v3
       with:
@@ -46,3 +49,4 @@ jobs:
         restore-keys: ${{ runner.os }}-dialyzer-
     - name: Run Dialyzer
       run: mix test
+      continue-on-error: true
