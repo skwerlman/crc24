@@ -1,3 +1,8 @@
+// the feature flag nif is needed because the init! macro will fail to build in a non-nif setting (such as during testing)
+// this feature should be enabled in the corresponding elixir module
+#[cfg(feature = "nif")]
+mod nif;
+
 // see RFC 4880, section 6 for an explanation of these constants
 // https://www.ietf.org/rfc/rfc4880.txt
 const CRC_24_INIT: u32 = 0xB704CE;
@@ -24,33 +29,11 @@ where
     csum & 0xFFFFFF
 }
 
-// the feature flag nif is needed because the init! macro will fail to build in a non-nif setting (such as during testing)
-// this feature should be enabled in the corresponding elixir module
-#[cfg(feature = "nif")]
-pub mod nif {
-    // this mod is for type-specific adapters which take BEAM data and convert it into iterators of u8
-    // this allows us to accept more types without needing to adapt the actual crc impl
-
-    use rustler::{Binary, Error};
-
-    use crate::crc24;
-
-    #[rustler::nif]
-    /// calculate the crc24 of an elixir binary
-    fn crc24_binary(bin: Binary) -> Result<u32, Error> {
-        // take ownership of the binary so we can convert it to a mutable iterator
-        let owned_bin = bin.to_owned().expect("Could not take ownership of binary");
-        Ok(crc24(&mut owned_bin.iter().cloned()))
-    }
-
-    rustler::init!("Elixir.Crc24.Native.Crc24");
-}
-
 #[cfg(test)]
 mod tests {
     // this mod tests the crc24 function without involving any of the NIF machinery
     // the elixir suite is more comprehensive, as it includes several property tests as well
-    use super::*;
+    use super::crc24;
 
     #[test]
     fn test_crc24() {
