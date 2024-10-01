@@ -47,5 +47,5 @@ jobs:
           key: ${{ runner.os }}-dialyzer-${{ hashFiles('**/dialyxir_erlang-*_elixir-*_deps-dev.plt') }}
           restore-keys: ${{ runner.os }}-dialyzer-
       - name: Run Dialyzer
-        run: mix test
+        run: mix dialyzer
         continue-on-error: true
