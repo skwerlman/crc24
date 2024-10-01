@@ -69,7 +69,7 @@ jobs:
       - name: Restore Dialyzer cache
         uses: actions/cache@v3
         with:
-          path: "_build/dialyxir_erlang-*_elixir-*_deps-dev.plt*"
+          path: "_build/dev/dialyxir_erlang-*_elixir-*_deps-dev.plt*"
           key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-dialyzer-${{ hashFiles('**/dialyxir_erlang-*_elixir-*_deps-dev.plt') }}
           restore-keys: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-dialyzer-
       - name: Run Dialyzer
