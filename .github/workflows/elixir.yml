@@ -65,9 +65,7 @@ jobs:
       - name: Build (dev)
         run: mix compile
       - name: Build (test)
-        run: mix compile
-        with:
-          mix_env: test
+        run: MIX_ENV=test mix compile
       - name: Run formatter
         run: mix format --check-formatted
         if: ${{ always() }}
