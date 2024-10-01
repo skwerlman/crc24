@@ -13,6 +13,6 @@ defmodule Crc24 do
       iex> Crc24.crc24("Hello, world!!!")
       0xBE7D51
   """
-  @spec crc24(any()) :: non_neg_integer()
+  @spec crc24(data :: any) :: non_neg_integer
   defdelegate crc24(data), to: Crc24.Native.Crc24
 end
