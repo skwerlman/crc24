@@ -17,4 +17,4 @@ path = "src/lib.rs"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
-rustler = { version = "0.34.0", features = ["nif_version_2_17"] }
+rustler = { version = "0.34.0", features = ["nif_version_2_15"] }
