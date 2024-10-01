@@ -14,6 +14,7 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         elixir:
           - "1.17.3"
@@ -53,25 +54,32 @@ jobs:
           path: deps
           key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
-      - name: Install dependencies
-        run: mix deps.get
-      - name: Run tests
-        run: mix test
-      - name: Run formatter
-        run: mix format --check-formatted
-        continue-on-error: true
-      - name: Run credo
-        run: mix credo --strict
-        continue-on-error: true
-      - name: Run gradient
-        run: mix gradient
-        continue-on-error: true
       - name: Restore Dialyzer cache
         uses: actions/cache@v3
         with:
           path: "_build/dev/dialyxir_erlang-*_elixir-*_deps-dev.plt*"
           key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-dialyzer-${{ hashFiles('_build/dev/dialyxir_erlang-*_elixir-*_deps-dev.plt') }}
           restore-keys: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-dialyzer-
+      - name: Install dependencies
+        run: mix deps.get
+      - name: Build (dev)
+        run: mix compile
+      - name: Build (test)
+        run: mix compile
+        with:
+          mix_env: test
+      - name: Run formatter
+        run: mix format --check-formatted
+        if: ${{ always() }}
+      - name: Run tests
+        run: mix test
+        if: ${{ !cancelled() }}
+      - name: Run credo
+        run: mix credo --strict
+        if: ${{ !cancelled() }}
+      - name: Run gradient
+        run: mix gradient
+        if: ${{ !cancelled() }}
       - name: Run Dialyzer
         run: mix dialyzer
-        continue-on-error: true
+        if: ${{ !cancelled() }}
