@@ -1,4 +1,5 @@
 defmodule Crc24.Native.Crc24 do
+  # credo:disable-for-this-file Credo.Check.Readability.Specs
   # internal module to talk to the underlying rust nif
 
   @moduledoc false
